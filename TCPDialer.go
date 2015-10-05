@@ -21,19 +21,20 @@ func main() {
 	}
 	connWriter := bufio.NewWriter(conn)
 	connReader := bufio.NewReader(conn)
+	for !strings.EqualFold(strings.TrimSpace(sent), "exit") {
+		sent = console.Read()
 
-	sent = console.Read()
+		console.Write("Sending " + sent + "\n")
 
-	console.Write("Sending " + sent + "\n")
+		connWriter.WriteString(sent)
+		connWriter.Flush()
 
-	connWriter.WriteString(sent)
-	connWriter.Flush()
-
-	result, err := connReader.ReadString('\n')
-	if err != nil {
-		log.Fatal(err)
+		result, err := connReader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+		console.Write("Received result is:\n")
+		console.Write(result + "\n")
 	}
-	console.Write("close connection and print result\n")
-	console.Write(result + "\n")
 	conn.Close()
 }
